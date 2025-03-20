@@ -57,11 +57,34 @@ cd gemvoyage
 - Request validation
 - Secure error handling
 
-4. Install dependencies and start the development server:
+4. Install and Configure:
 ```bash
+# Install dependencies
 npm install
+
+# Start development server
 npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run serve
 ```
+
+### Available Scripts
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run serve` - Preview production build
+- `npm run lint` - Check code quality
+- `npm run check-env` - Verify environment variables
+- `npm run test:env` - Debug environment setup
+
+### Development Tools
+- Vite for fast development and optimized builds
+- ESLint for code quality
+- Environment variable validation
+- Debug tools for troubleshooting
 
 ## Development
 
@@ -96,10 +119,25 @@ Optional variables:
 ### Troubleshooting
 If environment variables aren't being read:
 1. Verify variable names match the platform:
-   - Local: VITE_SUPABASE_*
-   - Vercel: NEXT_PUBLIC_SUPABASE_*
-2. Rebuild the deployment after adding variables
-3. Check browser console for environment debugging logs
+   ```bash
+   # Check environment variables
+   npm run check-env
+   
+   # View full environment details
+   npm run test:env
+   ```
+
+2. Verify configurations:
+   - Local: Use VITE_SUPABASE_* in .env
+   - Vercel: Use NEXT_PUBLIC_SUPABASE_* in dashboard
+   - Run `npm run build` locally to test
+   - Check console for environment logs
+
+3. Common Solutions:
+   - Clear node_modules and reinstall
+   - Rebuild the deployment
+   - Use debug/env-check.html tool
+   - Check vite.config.js settings
 
 ## Security
 
