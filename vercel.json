@@ -1,25 +1,6 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": ".",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  },
-  "build": {
-    "env": {
-      "NODE_ENV": "production"
-    }
-  },
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "public": true,
   "github": {
     "silent": true
@@ -47,8 +28,17 @@
         {
           "key": "Referrer-Policy",
           "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co https://api.ipify.org;"
         }
       ]
     }
-  ]
+  ],
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/$1" }
+  ],
+  "cleanUrls": true,
+  "trailingSlash": false
 }

@@ -1,15 +1,38 @@
 {
   "name": "gemvoyage",
   "version": "1.0.0",
-  "description": "GemVoyage - Discover Hidden Wonders, Together",
+  "description": "GemVoyage - Discover Hidden Travel Wonders",
+  "type": "module",
   "scripts": {
-    "start": "http-server -p 8000"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "serve": "vite preview --port 3000",
+    "clean": "rm -rf dist",
+    "prebuild": "npm run clean",
+    "lint": "eslint . --ext .js",
+    "test:env": "node -e \"console.log(process.env)\"",
+    "vercel-build": "vite build",
+    "check-env": "node -e \"['VITE_SUPABASE_URL','VITE_SUPABASE_ANON_KEY','NEXT_PUBLIC_SUPABASE_URL','NEXT_PUBLIC_SUPABASE_ANON_KEY'].forEach(key => console.log(key, process.env[key] ? '✓' : '✗'))\""
   },
-  "keywords": [
-    "travel",
-    "community",
-    "discovery"
-  ],
-  "author": "",
-  "license": "ISC"
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "terser": "^5.26.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/gemvoyage.git"
+  },
+  "author": "GemVoyage Team",
+  "license": "MIT",
+  "private": true
 }

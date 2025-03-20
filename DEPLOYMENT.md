@@ -1,5 +1,23 @@
 # Deployment Guide
 
+## Build Configuration
+
+### Local Development Setup
+1. Install dependencies:
+```bash
+npm install
+```
+
+2. Start development server:
+```bash
+npm run dev
+```
+
+3. Build for production:
+```bash
+npm run build
+```
+
 ## Vercel Deployment Checklist
 
 ### 1. Environment Variables Setup
@@ -8,7 +26,13 @@
 - [ ] Verify variable names match exactly (including NEXT_PUBLIC_ prefix)
 - [ ] Ensure values are copied correctly from Supabase dashboard
 
-### 2. Deploy Process
+### 2. Build Configuration
+- [ ] Verify package.json is present
+- [ ] Confirm vite.config.js settings
+- [ ] Check build output directory is 'dist'
+- [ ] Test build locally with `npm run build`
+
+### 3. Deploy Process
 1. Push code to repository
 2. Go to Vercel dashboard
 3. Import project (if not already done)
@@ -105,7 +129,41 @@ VITE_SUPABASE_ANON_KEY=your-anon-key
 ```
 
 ## Production Deployment
+
+### Environment Variables
 For Vercel, use NEXT_PUBLIC_ prefix in dashboard:
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=your-project-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
+
+### Build Configuration
+The project uses Vite for building and Vercel for deployment:
+
+1. Build Command:
+```bash
+npm run build
+```
+
+2. Output Directory:
+```
+dist
+```
+
+3. Framework Preset:
+```
+Vite
+```
+
+### Environment Configuration
+- Local development uses VITE_ prefix
+- Production (Vercel) uses NEXT_PUBLIC_ prefix
+- Both prefixes are supported in vite.config.js
+- Environment variables are validated at runtime
+
+### Build and Deploy Process
+1. Push changes to repository
+2. Vercel automatically detects Vite configuration
+3. Builds using npm run build
+4. Serves from dist directory
+5. Applies security headers from vercel.json
