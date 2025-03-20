@@ -1,24 +1,67 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+import { initErrorBoundary, checkEnvironmentHealth } from './error-boundary.js'
+import { VERSION, logEnvironmentInfo, checkConfigurationHealth } from './version.js'
 
-// Get environment variables, handling both development and production
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+// Log version and environment information
+logEnvironmentInfo()
 
-// Validate environment variables
-if (!supabaseUrl || !supabaseKey) {
-    console.error('Missing Supabase environment variables')
-    console.error('SUPABASE_URL:', !!supabaseUrl)
-    console.error('SUPABASE_KEY:', !!supabaseKey)
-    throw new Error('Missing required environment variables. Please check environment configuration.')
+// Check configuration health
+const configHealth = checkConfigurationHealth()
+if (!configHealth.healthy) {
+    console.warn('Configuration Issues:', configHealth.issues)
 }
 
-// Log environment (safe version for debugging)
-console.log('Environment Check:', {
+// Initialize error boundary
+initErrorBoundary()
+
+// Check environment health before proceeding
+const envHealth = checkEnvironmentHealth()
+console.debug('Environment Health Check:', {
+    ...envHealth,
+    version: VERSION.version,
+    buildDate: VERSION.buildDate
+})
+
+// Environment variable handling with multiple fallbacks
+const getEnvVar = (name) => {
+    // Try Vite environment variables
+    const viteVar = import.meta.env[`VITE_${name}`];
+    if (viteVar) return viteVar;
+
+    // Try Vercel environment variables
+    const vercelVar = import.meta.env[`NEXT_PUBLIC_${name}`];
+    if (vercelVar) return vercelVar;
+
+    // Try window object (for environments that inject variables)
+    const windowVar = window[`ENV_${name}`];
+    if (windowVar) return windowVar;
+
+    return null;
+};
+
+// Get Supabase configuration
+const supabaseUrl = getEnvVar('SUPABASE_URL');
+const supabaseKey = getEnvVar('SUPABASE_ANON_KEY');
+
+// Debug information (safe version - no sensitive data)
+console.debug('Environment Status:', {
     hasUrl: !!supabaseUrl,
     hasKey: !!supabaseKey,
-    isDevelopment: import.meta.env.DEV,
-    platform: 'Vercel'
-})
+    mode: import.meta.env.MODE,
+    isDev: import.meta.env.DEV,
+    isProd: import.meta.env.PROD
+});
+
+// Validate configuration
+if (!supabaseUrl || !supabaseKey) {
+    const error = new Error('Missing Supabase configuration');
+    error.details = {
+        url: !supabaseUrl ? 'Missing SUPABASE_URL' : 'OK',
+        key: !supabaseKey ? 'Missing SUPABASE_ANON_KEY' : 'OK'
+    };
+    console.error('Configuration Error:', error.details);
+    throw error;
+}
 
 // Initialize Supabase client
 const supabase = createClient(supabaseUrl, supabaseKey)

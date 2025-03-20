@@ -19,6 +19,17 @@
         .success { color: green; }
         .error { color: red; }
         .warning { color: orange; }
+        .info { color: #666; }
+        .separator {
+            border-top: 2px solid #eee;
+            margin: 20px 0;
+        }
+        .section-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-top: 20px;
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -27,46 +38,92 @@
 
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+        import { VERSION, getEnvironmentStatus, checkConfigurationHealth } from '../version.js'
+        import { checkEnvironmentHealth } from '../error-boundary.js'
 
         const results = document.getElementById('results');
 
         function addResult(message, type = 'info') {
+            if (type === 'section') {
+                const div = document.createElement('div');
+                div.className = 'section-title';
+                div.textContent = message;
+                results.appendChild(div);
+                return;
+            }
+
             const div = document.createElement('div');
             div.className = `check-item ${type}`;
             div.textContent = message;
             results.appendChild(div);
+
+            if (type === 'separator') {
+                div.className = 'separator';
+            }
         }
 
-        // Check environment variables
-        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || window.ENV_SUPABASE_URL;
-        const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || window.ENV_SUPABASE_KEY;
+        // Version Information
+        addResult('Version Information', 'section');
+        addResult(`GemVoyage Version: ${VERSION.version}`);
+        addResult(`Build Date: ${VERSION.buildDate}`);
+        addResult(`Environment: ${VERSION.environment}`);
+        addResult('', 'separator');
 
-        // Environment type
-        addResult(`Environment: ${import.meta.env.MODE || 'production'}`);
+        // Environment Variables
+        addResult('Environment Variables', 'section');
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || window.ENV?.ENV_SUPABASE_URL;
+        const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || window.ENV?.ENV_SUPABASE_ANON_KEY;
+
+        // Environment Status
+        const envStatus = getEnvironmentStatus();
+        addResult(`Mode: ${envStatus.environment}`);
+        addResult(`Debug Enabled: ${envStatus.debug}`, envStatus.debug ? 'warning' : 'info');
         
-        // Check Supabase URL
+        // Configuration Health
+        addResult('Configuration Health', 'section');
+        const configHealth = checkConfigurationHealth();
+        if (configHealth.healthy) {
+            addResult('✓ All configurations are valid', 'success');
+        } else {
+            addResult('✗ Configuration issues detected:', 'error');
+            configHealth.issues.forEach(issue => {
+                addResult(`  - ${issue}`, 'warning');
+            });
+        }
+        addResult('', 'separator');
+
+        // Variable Checks
+        addResult('Variable Checks', 'section');
         if (supabaseUrl) {
             addResult('✓ Supabase URL is defined', 'success');
         } else {
             addResult('✗ Supabase URL is missing', 'error');
         }
 
-        // Check Supabase Key
         if (supabaseKey) {
             addResult('✓ Supabase Key is defined', 'success');
         } else {
             addResult('✗ Supabase Key is missing', 'error');
         }
 
-        // Check variable format
-        addResult('Variable name check:', 'info');
+        // Environment Variable Format Check
+        addResult('Variable Format Check', 'section');
         ['VITE_SUPABASE_URL', 'VITE_SUPABASE_ANON_KEY', 
          'NEXT_PUBLIC_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_ANON_KEY'].forEach(name => {
-            addResult(`  ${name}: ${import.meta.env[name] ? '✓' : '✗'}`, 
-                      import.meta.env[name] ? 'success' : 'warning');
+            addResult(`${name}: ${import.meta.env[name] ? '✓' : '✗'}`, 
+                     import.meta.env[name] ? 'success' : 'warning');
         });
+        addResult('', 'separator');
 
-        // Test Supabase connection
+        // Feature Status
+        addResult('Feature Status', 'section');
+        Object.entries(VERSION.config.features).forEach(([feature, enabled]) => {
+            addResult(`${feature}: ${enabled ? '✓' : '✗'}`, enabled ? 'success' : 'warning');
+        });
+        addResult('', 'separator');
+
+        // Connection Test
+        addResult('Connection Test', 'section');
         try {
             if (supabaseUrl && supabaseKey) {
                 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -81,11 +138,13 @@
         } catch (err) {
             addResult(`✗ Connection test error: ${err.message}`, 'error');
         }
+        addResult('', 'separator');
 
-        // Browser info
-        addResult('\nBrowser Information:', 'info');
+        // System Information
+        addResult('System Information', 'section');
         addResult(`User Agent: ${navigator.userAgent}`);
         addResult(`Timestamp: ${new Date().toISOString()}`);
+        addResult(`Debug Tools: ${VERSION.config.features.debugTools ? 'Enabled' : 'Disabled'}`);
     </script>
 </body>
 </html>

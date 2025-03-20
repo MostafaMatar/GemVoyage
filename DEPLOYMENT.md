@@ -23,8 +23,9 @@ npm run build
 ### 1. Environment Variables Setup
 - [ ] Add `NEXT_PUBLIC_SUPABASE_URL` in Vercel dashboard
 - [ ] Add `NEXT_PUBLIC_SUPABASE_ANON_KEY` in Vercel dashboard
-- [ ] Verify variable names match exactly (including NEXT_PUBLIC_ prefix)
-- [ ] Ensure values are copied correctly from Supabase dashboard
+- [ ] Set `DEBUG_ACCESS_TOKEN` for production debugging
+- [ ] Configure `NODE_ENV=production`
+- [ ] Set `INCLUDE_DEBUG=false` (default for production)
 
 ### 2. Build Configuration
 - [ ] Verify package.json is present
@@ -40,130 +41,155 @@ npm run build
 5. Deploy project
 6. Verify deployment logs for any errors
 
-### 3. Post-Deployment Verification
+### 4. Post-Deployment Verification
 - [ ] Check browser console for environment logs
 - [ ] Test form submission
 - [ ] Verify Supabase connection
 - [ ] Check rate limiting functionality
 - [ ] Test error handling
 
-### 4. Debug Tool
-The project includes a debug endpoint at `/debug/env-check.html` for verifying environment variables.
+### 5. Debug Tools
 
-**Important Security Note:**
-- Only use this tool during development and testing
-- Remove or restrict access to debug directory in production
-- Add to robots.txt to prevent indexing
-- Consider adding authentication for debug tools
+#### Development Environment
+The project includes debugging tools at `/debug/env-check.html`.
 
-To use the debug tool:
-1. Access `/debug/env-check.html` in your browser
-2. Review environment variable status
-3. Check Supabase connection
-4. Verify correct variable naming
+To use in development:
+1. Start development server: `npm run dev`
+2. Access `/debug/env-check.html`
+3. Review environment status
+4. Check configuration health
 
-### 5. Troubleshooting Steps
+#### Production Environment
+Debug tools in production require additional security:
 
-#### If variables aren't being read:
+1. Enable debug access:
+```bash
+# In Vercel dashboard:
+DEBUG_ACCESS_TOKEN=your-secure-token
+INCLUDE_DEBUG=true
+```
+
+2. Access debug endpoint with token:
+```bash
+curl -H "X-Debug-Token: your-secure-token" https://your-site.com/debug/env-check.html
+```
+
+3. Security Considerations:
+- Use strong, random tokens
+- Enable temporarily only
+- Rotate tokens regularly
+- Monitor access logs
+- Disable when not needed
+
+### 6. Troubleshooting Steps
+
+#### Environment Variables
 1. Verify variable names:
-   ```
+   ```bash
+   # Local Development
+   VITE_SUPABASE_URL
+   VITE_SUPABASE_ANON_KEY
+
+   # Production (Vercel)
    NEXT_PUBLIC_SUPABASE_URL
    NEXT_PUBLIC_SUPABASE_ANON_KEY
    ```
 
-2. Check browser console:
-   - Look for environment check logs
-   - Check for any error messages
-
-3. Rebuild deployment:
+2. Check configuration:
    ```bash
-   # In Vercel dashboard
-   1. Go to Deployments
-   2. Select latest deployment
-   3. Click "Redeploy"
+   # Run environment check
+   npm run check-env
+
+   # View detailed status
+   npm run test:env
    ```
 
-4. Clear browser cache and hard reload
+3. Debug Process:
+   - Check browser console logs
+   - Review environment health status
+   - Verify build configuration
+   - Test with debug endpoint
 
-#### Common Issues:
+#### Common Issues
 1. Wrong variable prefix
    - Local: VITE_*
    - Vercel: NEXT_PUBLIC_*
 
-2. Missing rebuild after adding variables
-   - Always redeploy after adding environment variables
+2. Missing rebuild after changes
+   - Redeploy after adding variables
+   - Clear build cache if needed
 
-3. Cache issues
-   - Clear browser cache
-   - Use incognito mode for testing
+3. Access Issues
+   - Verify debug token if enabled
+   - Check IP restrictions
+   - Review CSP headers
 
-4. Connection errors
-   - Verify Supabase project is active
-   - Check IP restrictions in Supabase
+### 7. Security Configuration
 
-### 5. Security Checks
+#### Basic Security
 - [ ] Verify CORS settings in Supabase
 - [ ] Check RLS policies are active
-- [ ] Confirm rate limiting is working
-- [ ] Test input validation
-- [ ] Verify error messages are safe
+- [ ] Test rate limiting
+- [ ] Validate input handling
+- [ ] Review error messages
 
-### 7. Security Considerations
-- [ ] Remove or secure debug endpoints in production
-- [ ] Add IP restrictions to Supabase
-- [ ] Enable request logging
-- [ ] Set up error alerting
-- [ ] Configure security headers
+#### Debug Security
+- [ ] Set secure DEBUG_ACCESS_TOKEN
+- [ ] Limit debug tool access
+- [ ] Enable logging for debug endpoints
+- [ ] Regular token rotation
+- [ ] Monitor debug access
+
+#### Headers and CSP
+- [ ] Verify CSP configuration
+- [ ] Check security headers
+- [ ] Test CORS settings
+- [ ] Review frame options
 
 ### 8. Monitoring Setup
-- [ ] Set up error monitoring
-- [ ] Configure performance monitoring
-- [ ] Enable deployment notifications
-- [ ] Set up status alerts
+- [ ] Configure error tracking
+- [ ] Set up performance monitoring
+- [ ] Enable security alerts
+- [ ] Monitor rate limits
+- [ ] Track debug access
 
-## Local Development
-For local development, use `.env` file with VITE_ prefix:
+## Environment Configuration
+
+### Development
 ```bash
-VITE_SUPABASE_URL=your-project-url
-VITE_SUPABASE_ANON_KEY=your-anon-key
+# .env file
+VITE_SUPABASE_URL=your-url
+VITE_SUPABASE_ANON_KEY=your-key
+NODE_ENV=development
 ```
 
-## Production Deployment
-
-### Environment Variables
-For Vercel, use NEXT_PUBLIC_ prefix in dashboard:
+### Production
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=your-project-url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+# Vercel Environment Variables
+NEXT_PUBLIC_SUPABASE_URL=your-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-key
+DEBUG_ACCESS_TOKEN=secure-random-token
+NODE_ENV=production
+INCLUDE_DEBUG=false
 ```
 
-### Build Configuration
-The project uses Vite for building and Vercel for deployment:
+### Build Process
+1. Variables are processed by inject-env plugin
+2. Debug tools are conditionally included
+3. Security headers are applied
+4. Environment is validated
 
-1. Build Command:
-```bash
-npm run build
-```
+### Verification Steps
+1. Check environment health
+2. Verify security settings
+3. Test debug access
+4. Monitor error logs
 
-2. Output Directory:
-```
-dist
-```
-
-3. Framework Preset:
-```
-Vite
-```
-
-### Environment Configuration
-- Local development uses VITE_ prefix
-- Production (Vercel) uses NEXT_PUBLIC_ prefix
-- Both prefixes are supported in vite.config.js
-- Environment variables are validated at runtime
-
-### Build and Deploy Process
-1. Push changes to repository
-2. Vercel automatically detects Vite configuration
-3. Builds using npm run build
-4. Serves from dist directory
-5. Applies security headers from vercel.json
+## Security Best Practices
+1. Never commit sensitive data
+2. Rotate access tokens regularly
+3. Limit debug tool access
+4. Monitor security logs
+5. Regular security audits
+6. Update dependencies
+7. Review CSP configuration
