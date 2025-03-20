@@ -1,5 +1,16 @@
 User-agent: *
 Allow: /
+Allow: /privacy-policy.html
+Allow: /terms-of-use.html
+Allow: /index.html
+Disallow: /.env*
+Disallow: /node_modules/
+
+# Important pages
+Allow: /*.html$
 
 # Sitemap location
 Sitemap: https://gemvoyage.com/sitemap.xml
+
+# Crawl delay to prevent server overload
+Crawl-delay: 10

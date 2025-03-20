@@ -393,6 +393,90 @@ a:focus {
     animation: fadeIn 0.5s ease forwards;
 }
 
+/* Breadcrumb Styles */
+.breadcrumb {
+    margin-bottom: var(--spacing-md);
+}
+
+.breadcrumb ol {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: 0;
+    margin: 0;
+}
+
+.breadcrumb li {
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumb li:not(:last-child)::after {
+    content: '/';
+    margin-left: var(--spacing-xs);
+    color: var(--text-color);
+    opacity: 0.5;
+}
+
+.breadcrumb a {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.breadcrumb a:hover {
+    color: var(--primary-color);
+}
+
+.breadcrumb li:last-child {
+    color: var(--text-color);
+    opacity: 0.7;
+}
+
+/* Legal Pages Styles */
+.legal-content {
+    padding-top: 120px;
+    padding-bottom: var(--spacing-lg);
+}
+
+.legal-content h1 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-sm);
+}
+
+.last-updated {
+    color: var(--text-color);
+    margin-bottom: var(--spacing-lg);
+    font-style: italic;
+}
+
+.policy-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.policy-section h2 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-sm);
+    text-align: left;
+}
+
+.policy-section p {
+    margin-bottom: var(--spacing-sm);
+}
+
+.policy-section ul {
+    list-style: disc;
+    margin-left: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+}
+
+.policy-section li {
+    margin-bottom: var(--spacing-xs);
+    line-height: 1.6;
+}
+
 /* Form States */
 .submit-button:disabled {
     opacity: 0.7;
