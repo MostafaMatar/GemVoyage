@@ -1,0 +1,15 @@
+{
+  "name": "gemvoyage",
+  "version": "1.0.0",
+  "description": "GemVoyage - Discover Hidden Wonders, Together",
+  "scripts": {
+    "start": "http-server -p 8000"
+  },
+  "keywords": [
+    "travel",
+    "community",
+    "discovery"
+  ],
+  "author": "",
+  "license": "ISC"
+}

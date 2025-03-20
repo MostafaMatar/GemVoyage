@@ -1,0 +1,426 @@
+/* Base styles and CSS Reset */
+:root {
+    /* Colors */
+    --primary-color: #3C9D9B;    /* Emerald Green */
+    --golden-amber: #FFAA00;     /* Golden Amber */
+    --bg-color: #FAFAFA;         /* Soft White */
+    --text-color: #3C9D9B;       /* Using Emerald Green for text */
+    --light-gray: var(--bg-color);
+    --dark-gray: var(--primary-color);
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 2rem;
+    --spacing-lg: 4rem;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+}
+
+/* Typography */
+h1, h2, h3 {
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: var(--spacing-md);
+    color: var(--primary-color);
+}
+
+h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.2;
+}
+
+h2 {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    text-align: center;
+}
+
+h3 {
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+}
+
+/* Layout */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-sm);
+}
+
+section {
+    padding: var(--spacing-lg) 0;
+}
+
+/* Navigation */
+.navbar {
+    background-color: var(--bg-color);
+    padding: var(--spacing-sm) 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(60, 157, 155, 0.1);
+}
+
+.navbar .container {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    flex-shrink: 0;
+}
+
+.brand-icon {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: var(--spacing-md);
+    margin-left: var(--spacing-lg);
+}
+
+.nav-menu a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.nav-menu a:hover,
+.nav-menu a:focus {
+    color: var(--primary-color);
+}
+
+.nav-toggle {
+    display: none;
+}
+
+/* Hero Section */
+.hero {
+    min-height: 100vh;
+    background: linear-gradient(rgba(60, 157, 155, 0.65), rgba(60, 157, 155, 0.65)),
+                url('/images/hero.jpg') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    padding-top: 80px;
+}
+
+.hero-content {
+    color: var(--bg-color);
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--spacing-md);
+}
+
+.hero h1,
+.hero p {
+    color: var(--bg-color);
+    margin-bottom: var(--spacing-md);
+}
+
+/* About Section */
+.about {
+    background-color: var(--light-gray);
+}
+
+.about-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Features Section */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+.feature-card {
+    padding: var(--spacing-md);
+    text-align: center;
+    background-color: var(--light-gray);
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.feature-card i {
+    font-size: 2.5rem;
+    color: var(--golden-amber);
+    margin-bottom: var(--spacing-sm);
+}
+
+/* Join Section */
+.join {
+    background-color: var(--primary-color);
+    color: var(--bg-color);
+    text-align: center;
+}
+
+.join h2 {
+    color: var(--bg-color);
+}
+
+.signup-form {
+    max-width: 500px;
+    margin: var(--spacing-md) auto;
+}
+
+.form-group {
+    margin-bottom: var(--spacing-sm);
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+/* Buttons */
+.cta-button,
+.submit-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: var(--golden-amber);
+    color: var(--bg-color);
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Footer */
+footer {
+    background-color: var(--dark-gray);
+    color: var(--bg-color);
+    padding: var(--spacing-md) 0;
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.footer-links a,
+.social-links a {
+    color: var(--bg-color);
+    text-decoration: none;
+    margin: 0 var(--spacing-sm);
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover,
+.social-links a:hover {
+    color: var(--golden-amber);
+}
+
+.social-links i {
+    font-size: 1.5rem;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .navbar .container {
+        gap: var(--spacing-sm);
+    }
+
+    .nav-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        margin-left: 0;
+        background-color: var(--bg-color);
+        padding: var(--spacing-sm);
+        box-shadow: 0 2px 4px rgba(60, 157, 155, 0.1);
+    }
+
+    .nav-menu.active {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nav-toggle {
+        display: block;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: var(--spacing-xs);
+    }
+
+    .hamburger {
+        display: block;
+        width: 24px;
+        height: 2px;
+        background-color: var(--primary-color);
+        position: relative;
+    }
+
+    .hamburger::before,
+    .hamburger::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: var(--primary-color);
+        transition: transform 0.3s ease;
+    }
+
+    .hamburger::before {
+        transform: translateY(-6px);
+    }
+
+    .hamburger::after {
+        transform: translateY(6px);
+    }
+
+    .nav-toggle.active .hamburger {
+        background-color: transparent;
+    }
+
+    .nav-toggle.active .hamburger::before {
+        transform: translateY(0) rotate(45deg);
+    }
+
+    .nav-toggle.active .hamburger::after {
+        transform: translateY(0) rotate(-45deg);
+    }
+}
+
+/* Accessibility Improvements */
+*:focus {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Skip to main content link for keyboard users */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--primary-color);
+    color: var(--bg-color);
+    padding: 8px;
+    z-index: 1001;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Ensure sufficient color contrast */
+.feature-card {
+    color: var(--text-color);
+}
+
+/* Add focus styles for interactive elements */
+button:focus,
+a:focus {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Animation for loading and transitions */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.feature-card {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+/* Form States */
+.submit-button:disabled {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+.success-message {
+    text-align: center;
+    padding: var(--spacing-md);
+    animation: fadeIn 0.5s ease;
+}
+
+.success-message i {
+    color: var(--primary-color);
+    font-size: 3rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.success-message h3 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-sm);
+}
+
+.error-message {
+    color: var(--primary-color);
+    background-color: rgba(60, 157, 155, 0.1);
+    padding: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+    border-radius: 4px;
+    text-align: center;
+}
