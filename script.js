@@ -86,18 +86,6 @@ function sanitizeInput(str) {
         .slice(0, 100) // Limit length
 }
 
-// Get client IP for rate limiting
-async function getClientIP() {
-    try {
-        const response = await fetch('https://api.ipify.org?format=json')
-        const data = await response.json()
-        return data.ip
-    } catch (error) {
-        console.error('Error getting client IP:', error)
-        return 'unknown'
-    }
-}
-
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('waitlist-form')
     const submitButton = form.querySelector('.submit-button')
@@ -127,21 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error('Invalid email format. Please enter a valid email address.')
             }
 
-            // Check rate limiting
-            const clientIP = await getClientIP()
-            const { data: rateLimitData } = await supabase
-                .from('rate_limits')
-                .select('attempts, last_attempt')
-                .eq('ip_address', clientIP)
-                .single()
-
-            if (rateLimitData) {
-                const timeSinceLastAttempt = Date.now() - new Date(rateLimitData.last_attempt).getTime()
-                if (timeSinceLastAttempt < 60000 && rateLimitData.attempts >= 5) { // 1 minute cooldown
-                    throw new Error('Too many attempts. Please try again later.')
-                }
-            }
-
             // Create user in Supabase
             const { data, error } = await supabase
                 .from('waitlist_users')
@@ -149,8 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     {
                         full_name: name,
                         email: email,
-                        signed_up_at: new Date().toISOString(),
-                        ip_address: clientIP // Store for rate limiting
+                        signed_up_at: new Date().toISOString()
                     }
                 ])
                 .select()
@@ -161,13 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 throw error
             }
-
-            // Update rate limiting
-            await supabase.from('rate_limits').upsert({
-                ip_address: clientIP,
-                attempts: (rateLimitData?.attempts || 0) + 1,
-                last_attempt: new Date().toISOString()
-            })
 
             // Show success message
             form.innerHTML = `
