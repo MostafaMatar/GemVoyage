@@ -72,13 +72,34 @@ npm run dev
 
 ## Environment Variables
 
-Required environment variables:
+### Local Development
+Required environment variables in `.env`:
+```bash
+VITE_SUPABASE_URL=your-project-url
+VITE_SUPABASE_ANON_KEY=your-anon-key
+```
 
-- `VITE_SUPABASE_URL`: Your Supabase project URL
-- `VITE_SUPABASE_ANON_KEY`: Your Supabase anon/public key
+### Vercel Deployment
+1. Go to your Vercel project settings
+2. Navigate to the "Environment Variables" section
+3. Add the following variables:
+```bash
+NEXT_PUBLIC_SUPABASE_URL=your-project-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
 
-Optional:
+Note: For Vercel deployment, use `NEXT_PUBLIC_` prefix instead of `VITE_` prefix.
+
+Optional variables:
 - `GA_TRACKING_ID`: Google Analytics tracking ID
+
+### Troubleshooting
+If environment variables aren't being read:
+1. Verify variable names match the platform:
+   - Local: VITE_SUPABASE_*
+   - Vercel: NEXT_PUBLIC_SUPABASE_*
+2. Rebuild the deployment after adding variables
+3. Check browser console for environment debugging logs
 
 ## Security
 

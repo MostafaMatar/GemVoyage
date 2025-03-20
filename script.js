@@ -1,14 +1,24 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-// Get environment variables
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+// Get environment variables, handling both development and production
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 // Validate environment variables
 if (!supabaseUrl || !supabaseKey) {
     console.error('Missing Supabase environment variables')
-    throw new Error('Missing required environment variables. Please check your .env file.')
+    console.error('SUPABASE_URL:', !!supabaseUrl)
+    console.error('SUPABASE_KEY:', !!supabaseKey)
+    throw new Error('Missing required environment variables. Please check environment configuration.')
 }
+
+// Log environment (safe version for debugging)
+console.log('Environment Check:', {
+    hasUrl: !!supabaseUrl,
+    hasKey: !!supabaseKey,
+    isDevelopment: import.meta.env.DEV,
+    platform: 'Vercel'
+})
 
 // Initialize Supabase client
 const supabase = createClient(supabaseUrl, supabaseKey)
