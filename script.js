@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Create user in Supabase
-            const { data, error } = await supabase
+            const { error } = await supabase
                 .from('waitlist_users')
                 .insert([
                     {
@@ -125,7 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         signed_up_at: new Date().toISOString()
                     }
                 ])
-                .select()
 
             if (error) {
                 if (error.code === '23505') { // Unique violation
